@@ -1,27 +1,31 @@
+
 RecTable <- function(x){
-   library(gridExtra)
-   library(grid)
+   
+   library(dplyr)
+   library(magrittr)
    
    load('recs.RData')
    
-   tbl <- subset(recs, recs$tick == x)
-   print(tbl)
+   xx <- recs %>% 
+      select(cdate,
+             tick, 
+             price.target, 
+             lower.eval, 
+             lower.buy,
+             upper.buy,
+             upper.eval) %>%
+      filter(tick == x) %>%
+      set_rownames(.[,'cdate']) %>%
+      select(price.target,
+             lower.eval,
+             lower.buy,
+             upper.buy,
+             upper.eval) %>%
+      set_colnames(c('Price Target',
+                     'Lower Eval',
+                     'Lower Buy',
+                     'Upper Buy',
+                     'Upper Eval'))
    
-   png(paste0('R:/David/equity research/',
-              x,
-              '/',
-              format(Sys.Date(), '%Y%m%d'), 
-              '_', 
-              x, 
-              '_recHistory.png'),
-       width = 8, height = 2, units = 'in', res = 75)
-   
-   p <- tableGrob(tbl, rows = NULL)
-   grid.arrange(p, top = textGrob("Past Recommendations", 
-                                  x = unit(0.01, 'npc'), 
-                                  just = 'left',
-                                  gp = gpar(fontface = 'bold')))
-   dev.off()
-   
-   
+   return(xx)
 }

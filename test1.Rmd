@@ -1,0 +1,23 @@
+---
+title: "Recommendation Table"
+author: "David Allen"
+date: "November 27, 2018"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r rec.table, echo = FALSE, results= 'asis'}
+
+library(knitr)
+source('R:/David/projects/recommendation tracker/RecTable.R')
+xx <- RecTable('all')
+kable(xx)
+
+xx <- RecTable('rig')
+kable(xx)
+
+```
+
+

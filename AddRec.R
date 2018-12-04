@@ -1,30 +1,25 @@
-library(magrittr)
-
-# recs <- matrix(ncol = 7, nrow = 0) %>%
-#    data.frame() %>%
-#    set_colnames(c('date',
-#                   'tick',
-#                   'price.target',
-#                   'lower.eval',
-#                   'lower.buy',
-#                   'upper.buy',
-#                   'upper.eval'))
-# 
-# save(recs, file = 'recs.RData')
-
 AddRec <- function(
-   tick, pt, leval, ueval, lbuy = NA, ubuy = NA, date = Sys.Date()) {
+   tick, pt, leval, ueval, lbuy = NA, ubuy = NA, date = NA) {
+   
+   library(magrittr)
    
    load('recs.RData')
    
+   if(is.na(date)){
+      date <- Sys.Date()} else {
+         date <- as.Date(date, '%Y%m%d')
+      }
+
    new.entry <- data.frame(
-      date         = date %>% as.character %>% as.Date('%Y%m%d'),
+      ddate        = date,
+      cdate        = format(date, '%b %d, %Y'),
       tick         = tick,
       price.target = pt,
       lower.eval   = leval,
       lower.buy    = lbuy,
       upper.buy    = ubuy,
-      upper.eval   = ueval)
+      upper.eval   = ueval,
+      stringsAsFactors = FALSE)
    
    recs <- rbind(new.entry, recs)
    
@@ -32,8 +27,3 @@ AddRec <- function(
    save(recs, file = paste0(format(Sys.Date(), '%Y%m%d'), '_recs.RData'))
 }
 
-DeleteRec <- function(n=1){
-   load('recs.RData')
-   recs <- recs[-n,]
-   save(recs, file = 'recs.RData')
-}
